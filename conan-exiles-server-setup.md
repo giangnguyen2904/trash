@@ -1,5 +1,7 @@
 # Hướng Dẫn Cài Đặt Conan Exiles Dedicated Server trên Ubuntu 24.04
 
+> 📦 **GitHub Repository:** https://github.com/giangnguyen2904/trash.git
+
 ## 📋 Yêu Cầu Hệ Thống
 
 ### Tối Thiểu
@@ -22,7 +24,7 @@
 
 ```bash
 cd ~
-wget https://raw.githubusercontent.com/[your-repo]/conan-server-setup.sh
+wget https://raw.githubusercontent.com/giangnguyen2904/trash/main/conan-server-setup.sh
 chmod +x conan-server-setup.sh
 ```
 
@@ -54,12 +56,22 @@ sudo apt install software-properties-common wget curl lib32gcc-s1 lib32stdc++6 -
 
 Conan Exiles không có server Linux native, cần Wine để chạy server Windows.
 
+**Phương pháp 1: WineHQ (Khuyến nghị)**
+
 ```bash
 sudo mkdir -pm755 /etc/apt/keyrings
 sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
 sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources
 sudo apt update
 sudo apt install --install-recommends winehq-stable -y
+```
+
+**Phương pháp 2: Ubuntu Repository (Nếu WineHQ gặp lỗi dependencies)**
+
+```bash
+sudo dpkg --add-architecture i386
+sudo apt update
+sudo apt install wine64 wine32 winetricks -y
 ```
 
 ### Bước 3: Cài Đặt Xvfb (Virtual Display)
@@ -317,6 +329,22 @@ chmod +x ~/update_server.sh
 ---
 
 ## 🐛 Xử Lý Sự Cố
+
+### Lỗi Cài Đặt Wine (Dependency Issues)
+
+Nếu gặp lỗi `winehq-stable : Depends: wine-stable` khi cài Wine:
+
+```bash
+# Xóa WineHQ repository
+sudo rm -f /etc/apt/sources.list.d/winehq-noble.sources
+sudo rm -f /etc/apt/keyrings/winehq-archive.key
+sudo apt update
+
+# Cài Wine từ Ubuntu repository
+sudo dpkg --add-architecture i386
+sudo apt update
+sudo apt install wine64 wine32 winetricks -y
+```
 
 ### Server Không Khởi Động
 

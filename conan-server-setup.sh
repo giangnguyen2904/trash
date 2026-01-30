@@ -32,11 +32,34 @@ apt install software-properties-common wget curl lib32gcc-s1 lib32stdc++6 -y
 
 # Step 2: Install Wine
 echo -e "${YELLOW}[2/10] Cài đặt Wine...${NC}"
+
+# Try WineHQ first
+echo "Thử cài đặt Wine từ WineHQ..."
 mkdir -pm755 /etc/apt/keyrings
-wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources
+wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key 2>/dev/null || true
+wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources 2>/dev/null || true
 apt update
-apt install --install-recommends winehq-stable -y
+
+if apt install --install-recommends winehq-stable -y 2>/dev/null; then
+    echo -e "${GREEN}Wine từ WineHQ đã được cài đặt thành công${NC}"
+else
+    echo -e "${YELLOW}WineHQ gặp vấn đề, chuyển sang cài Wine từ Ubuntu repository...${NC}"
+    # Remove WineHQ sources if they exist
+    rm -f /etc/apt/sources.list.d/winehq-noble.sources
+    rm -f /etc/apt/keyrings/winehq-archive.key
+    
+    # Install Wine from Ubuntu repository
+    dpkg --add-architecture i386
+    apt update
+    apt install wine64 wine32 winetricks -y
+    
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}Wine từ Ubuntu repository đã được cài đặt thành công${NC}"
+    else
+        echo -e "${RED}Không thể cài đặt Wine. Vui lòng cài thủ công.${NC}"
+        exit 1
+    fi
+fi
 
 # Step 3: Install Xvfb
 echo -e "${YELLOW}[3/10] Cài đặt Xvfb (Virtual Display)...${NC}"
