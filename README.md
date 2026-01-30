@@ -111,12 +111,32 @@ sudo swapon /swapfile
 
 ---
 
+## 🗑️ Gỡ Bỏ Server
+
+Nếu muốn gỡ bỏ hoàn toàn:
+
+```bash
+wget https://raw.githubusercontent.com/giangnguyen2904/trash/main/uninstall-conan-server.sh
+chmod +x uninstall-conan-server.sh
+sudo ./uninstall-conan-server.sh
+```
+
+Script sẽ:
+- Dừng và xóa service
+- Xóa tất cả server files
+- Xóa steam user
+- Gỡ Wine và dependencies
+- Xóa firewall rules
+
+---
+
 ## 📦 Files Trong Repo
 
 - **README.md** - Hướng dẫn này
 - **conan-server-guide.md** - Hướng dẫn chi tiết
 - **install-conan-server.sh** - Script cài đặt tự động
 - **update-server.sh** - Script cập nhật
+- **uninstall-conan-server.sh** - Script gỡ bỏ
 
 ---
 
